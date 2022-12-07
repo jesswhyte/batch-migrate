@@ -57,7 +57,6 @@ for DIRECTORY in $(cat tmp.ExtractedList); do
                 cp "${TESTFILE}" ${PARENTDIR}/Migrated/    
             fi
             chmod -R 755 ${PARENTDIR}/Migrated
-            fi
         fi
     done
 done 
