@@ -53,6 +53,11 @@ for DIRECTORY in $(cat tmp.ExtractedList); do
             TYPE=${TYPE//$'\n'/}
             if [[ "${TYPE}" =~ "Word" ]] || [[ "${TYPE}" =~ "WordPerfect" ]]; then
                 /Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to pdf:writer_pdf_Export --outdir ${PARENTDIR}/Migrated/ "${TESTFILE}"
+                # because soffice headless cuts off the filename extension and adds .pdf as the new extension, this creates
+                # issues when users used unique or custome filename extensions or had the same filename but different extensions
+                # below moves the file created by soffice to its original filename + .pdf
+                TEMPNAME=$(echo ${TESTFILE}%.*)
+                mv ${PARENTDIR}/Migrated/${TEMPNAME}.pdf ${PARENTDIR}/Migrated/${TESTFILE}.pdf 
             else
                 cp "${TESTFILE}" ${PARENTDIR}/Migrated/    
             fi
