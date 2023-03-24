@@ -33,8 +33,7 @@ done
 # set old md5 value to blank
 old_md5=""
 
-# run from within directory specified 
-cd ${DIR}
+DIR=${DIR%/}
 
 # read each line of input file
 while IFS=',' read -r name size mtime error md5 namespace ID format version MIME basis warning; do
@@ -43,19 +42,19 @@ while IFS=',' read -r name size mtime error md5 namespace ID format version MIME
   # check if md5 is same as old md5
   if [ "$md5" != "$old_md5" ]; then
     echo
-    echo "Keeping ${name}"
+    echo "Keeping ${DIR}/${name}"
     old_md5=${md5}
   else
     #echo "verifying Duplicate: ${name} exists"
     newname=$(echo ${name} | sed 's/"//g')
-    if [ ! -f "${newname}" ]; then
+    if [ ! -f "${DIR}/${newname}" ]; then
         echo "${newname} does not exist"
     else
       if $DRYRUN; then
-        echo "Duplicate: "${newname}", will move to ${diskdir}_Duplicates/"
+        echo "Duplicate: "${DIR}/${newname}", will move to ${DIR}/${diskdir}-Duplicates/"
 	    else
-        mv -v "${newname}" ${diskdir}_Duplicates/
-		    echo "MOVED: ${newname} to ${diskdir}_Duplicates/"
+        mv -v "${DIR}/${newname}" ${DIR}/${diskdir}-Duplicates/
+		    echo "MOVED: ${DIR}/${newname} to ${DIR}/${diskdir}-Duplicates/"
 	    fi
     fi
   fi
