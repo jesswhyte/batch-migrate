@@ -35,14 +35,13 @@ while IFS=',' read -r name size mtime error md5 filetype version warning; do
     echo "Keeping ${name}"
     old_md5=${md5}
   else
-    # mkdir -p Coll593_27_Hill_${disknum}_Duplicates
     #echo "verifying Duplicate: ${name} exists"
     newname=$(echo ${name} | sed 's/"//g')
     if [ ! -f "${newname}" ]; then
         echo "${newname} does not exist"
     else
         echo "Duplicate: "${newname}", will move to Coll593_27_Hill_${disknum}_Duplicates/"
-        mv -v "${newname}" Coll593_27_Hill_${disknum}_Duplicates/
+        mv -v "${newname}" ${disknum}_Duplicates/
     fi
   fi
 done < "$CSV"
