@@ -3,8 +3,9 @@
 function show_help() {
   echo
   echo -e "USAGE: bash dupe-mover.sh -c ../duplicates-Hill-list.csv "
-  echo -e "run from within directory e.g. data/"
   echo -e "-c : csv of dupe files"
+  echo -e "-d : directory to run on"
+  echo -e "-N : don't actually move the files, **** use this for a dry run ****"
   echo -e ""
 }
 
@@ -12,7 +13,11 @@ function fail_exit() {
     exit $1
 }
 
-while getopts "h?c:" OPTION
+DRYRUN=false
+CSV=""
+DIR="" 
+
+while getopts "h?c:d:N" OPTION
 do
   case "${OPTION}" in
     h|\?)
@@ -20,15 +25,21 @@ do
         fail_exit 1
         ;;
     c) CSV=${OPTARG};;
+    d) DIR=${OPTARG};;
+    N) DRYRUN=true
   esac
 done
 
 # set old md5 value to blank
 old_md5=""
 
+# run from within directory specified 
+cd ${DIR}
+
 # read each line of input file
-while IFS=',' read -r name size mtime error md5 filetype version warning; do
-  disknum=$(echo "${name}" | awk -F"_" '{print $4}' | sed 's/_Extracted*//' | awk -F"/" '{print $1}')
+while IFS=',' read -r name size mtime error md5 namespace ID format version MIME basis warning; do
+  disknum=$(echo "${name}" | awk -F"_" '{print $4}' | sed 's/-Extracted*//' | awk -F"/" '{print $1}')
+  diskdir=$(echo "${name}" | awk -F"/" '{print $1}' | sed 's/-Extracted*//')
   # check if md5 is same as old md5
   if [ "$md5" != "$old_md5" ]; then
     echo
@@ -40,8 +51,12 @@ while IFS=',' read -r name size mtime error md5 filetype version warning; do
     if [ ! -f "${newname}" ]; then
         echo "${newname} does not exist"
     else
-        echo "Duplicate: "${newname}", will move to Coll593_27_Hill_${disknum}_Duplicates/"
+      if $DRYRUN; then
+        echo "Duplicate: "${newname}", will move to ${diskdir}_Duplicates/"
+	    else
         mv -v "${newname}" ${disknum}_Duplicates/
+		    echo "MOVED: ${newname} to ${diskdir}_Duplicates/"
+	    fi
     fi
   fi
 done < "$CSV"
