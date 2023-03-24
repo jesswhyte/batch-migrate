@@ -54,7 +54,7 @@ while IFS=',' read -r name size mtime error md5 namespace ID format version MIME
       if $DRYRUN; then
         echo "Duplicate: "${newname}", will move to ${diskdir}_Duplicates/"
 	    else
-        mv -v "${newname}" ${disknum}_Duplicates/
+        mv -v "${newname}" ${diskdir}_Duplicates/
 		    echo "MOVED: ${newname} to ${diskdir}_Duplicates/"
 	    fi
     fi
