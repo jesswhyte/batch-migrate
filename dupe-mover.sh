@@ -2,7 +2,7 @@
 
 function show_help() {
   echo
-  echo -e "USAGE: bash dupe-mover-hill.sh -c ../duplicates-Hill-list.csv "
+  echo -e "USAGE: bash dupe-mover.sh -c ../duplicates-Hill-list.csv "
   echo -e "run from within directory e.g. data/"
   echo -e "-c : csv of dupe files"
   echo -e ""
