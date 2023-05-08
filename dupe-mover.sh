@@ -47,14 +47,14 @@ while IFS=',' read -r name size mtime error md5 namespace ID format version MIME
   else
     #echo "verifying Duplicate: ${name} exists"
     newname=$(echo ${name} | sed 's/"//g')
-    if [ ! -f "${DIR}/${diskdir}/${newname}" ]; then
-        echo "${DIR}/${diskdir}/${newname} does not exist"
+    if [ ! -f "${DIR}/${newname}" ]; then
+        echo "${DIR}/${newname} does not exist"
     else
       if $DRYRUN; then
         echo "Duplicate: "${DIR}/${newname}", will move to ${DIR}/${diskdir}-Duplicates/"
 	    else
         mv -v "${DIR}/${newname}" ${DIR}/${diskdir}-Duplicates/
-		    echo "MOVED: ${DIR}/${newname} to ${DIR}/${diskdir}-Duplicates/"
+		    echo "MOVED: ${DIR}/${newname} to ${diskdir}-Duplicates/"
 	    fi
     fi
   fi
